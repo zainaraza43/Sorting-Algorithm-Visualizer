@@ -1,15 +1,25 @@
 import pygame
+import random
  
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+
+numbers = []
+
+for i in range(1,1000):
+	numbers.append(i)
+
+random.shuffle(numbers)
+
+print(numbers)
  
 pygame.init()
  
 # Set the width and height of the screen [width, height]
-size = (1000, 750)
+size = (1000, 1000)
 screen = pygame.display.set_mode(size)
  
 pygame.display.set_caption("Visualizer")
@@ -27,7 +37,7 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
  
-    screen.fill(RED)
+    screen.fill(BLACK)
  
     
     pygame.display.flip()
