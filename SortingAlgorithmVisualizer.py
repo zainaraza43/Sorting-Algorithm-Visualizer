@@ -1,5 +1,12 @@
 import pygame
 import random
+import time
+
+class Bar:
+
+	def __init__(self, value, colour):
+		self.value = value
+		self.colour = colour
  
 # Define some colors
 BLACK = (0, 0, 0)
@@ -7,15 +14,30 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-numbers = []
+# Random numbers to be sorted
+bars = []
 
 for i in range(1,1000):
-	numbers.append(i)
+	bars.append(Bar(i,WHITE))
 
-random.shuffle(numbers)
+random.shuffle(bars)
 
-print(numbers)
- 
+
+# Sorting algorithms
+algos = ["Bubble Sort"]
+currentAlgo = "Bubble Sort"
+
+def Swap(item1, item2):
+	temp = item1
+	item1 = item2
+	item2 = temp
+
+def BubbleSort(list):
+	for i in range(len(list)):
+		for j in range(0,len(list)-i-1):
+			if list[j].value > list[j+1].value:
+				list[j], list[j+1] = list[j+1], list[j]
+
 pygame.init()
  
 # Set the width and height of the screen [width, height]
@@ -36,10 +58,18 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
- 
+
     screen.fill(BLACK)
- 
-    
+
+    # Displays the bars
+    for bar in bars: 
+    	pygame.draw.rect(screen,bar.colour,pygame.Rect(bars.index(bar)+1,1000-bar.value,1,bar.value))
+
+    if currentAlgo in algos:
+    	if currentAlgo == "Bubble Sort":
+    		BubbleSort(bars)
+    	currentAlgo = "None"
+
     pygame.display.flip()
  
     # Limit to 60 frames per second
