@@ -2,6 +2,8 @@ import pygame
 import random
 import time
 
+pygame.init()
+
 class Bar:
 	def __init__(self, value, colour):
 		self.value = value
@@ -13,6 +15,9 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+#Font
+font = pygame.font.SysFont("arial", 24)
+
 # Random numbers to be sorted
 bars = []
 
@@ -21,12 +26,13 @@ for i in range(1,51):
 
 random.shuffle(bars)
 sort = False
+
 # Sorting algorithms
 algos = ["Bubble Sort","Insertion Sort"]
 index = 0
 currentAlgo = algos[index]
 
-def AppointSelected(list, item, colour):
+def BubbleSelected(list, item, colour):
 	for l in list:
 		if l == item:
 			l.colour = colour
@@ -34,11 +40,19 @@ def AppointSelected(list, item, colour):
 			l.colour = WHITE
 
 def BubbleSort(list):
+	
+	comparisons = 0
+	swaps = 0
 
 	for i in range(len(list)):
 		for j in range(0,len(list)-i-1):
 
-			AppointSelected(list, list[j], RED)
+			BubbleSelected(list, list[j], RED)
+
+
+			pygame.draw.rect(screen, BLACK, pygame.Rect(250,530,50,25))
+			comparisons += 1
+			screen.blit(font.render(str(comparisons), True, WHITE),(250,530))
 
 			for bar in bars:
 				pygame.event.pump()
@@ -48,17 +62,39 @@ def BubbleSort(list):
 
 			if list[j].value > list[j+1].value:
 				list[j], list[j+1] = list[j+1], list[j]
+				pygame.draw.rect(screen, BLACK, pygame.Rect(250,560,50,25))
+				swaps += 1
+				screen.blit(font.render(str(swaps), True, WHITE),(250,560))
 
 	for bar in bars:
 		pygame.draw.rect(screen, GREEN, pygame.Rect(bars.index(bar)*10, 500 - bar.value*10, 10, bar.value * 10))
 		pygame.time.delay(15)
 		pygame.display.flip()
 
-pygame.init()
+def InsertionSort(list):
 
-#Font
-font = pygame.font.SysFont("arial", 24)
-currentAlgoText = font.render("Current Algorithm:", True, WHITE)
+	comparisons = 0
+	swaps = 0
+
+	for i in range(1, len(list)):
+
+		j = i
+		while j > 0 and list[j-1].value > list[j].value:
+
+			for bar in bars:
+				pygame.event.pump()
+				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
+				pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
+				pygame.display.flip()
+
+			list[j], list[j-1] = list[j-1], list[j]
+			j -= 1
+
+	for bar in bars:
+		pygame.draw.rect(screen, GREEN, pygame.Rect(bars.index(bar)*10, 500 - bar.value*10, 10, bar.value * 10))
+		pygame.time.delay(15)
+		pygame.display.flip()
+		
  
 # Set the width and height of the screen [width, height]
 size = (500, 700)
@@ -86,23 +122,26 @@ while not done:
 			if event.key == pygame.K_RETURN: # If enter is pressed
 				if sort:
 					random.shuffle(bars)
-					print("shuffled")
 					sort = False
 				if currentAlgo == "Bubble Sort":
 					BubbleSort(bars)
+				elif currentAlgo == "Insertion Sort":
+					InsertionSort(bars)
 				sort = True
 
 			if event.key == pygame.K_RIGHT: # If right arrow is pressed
-				sort = False
-				random.shuffle(bars)
+				if sort:
+					random.shuffle(bars)
+					sort = False
 				if index == len(algos) - 1:
 					index = 0
 				else:
 					index = index + 1
 
 			if event.key == pygame.K_LEFT: # If left arrow is pressed
-				sort = False
-				random.shuffle(bars)
+				if sort:
+					random.shuffle(bars)
+					sort = False
 				if index == 0:
 					index = len(algos) - 1
 				else:
@@ -117,10 +156,11 @@ while not done:
 
 	currentAlgo = algos[index]
 
-	screen.blit(currentAlgoText,(5,500))
+	screen.blit(font.render("Current Algorithm:", True, WHITE),(5,500))
 	pygame.draw.rect(screen, BLACK, pygame.Rect(220,500,200,25))
 	screen.blit(font.render(currentAlgo, True, WHITE),(220,500))
-
+	screen.blit(font.render("Comparisons:", True, WHITE),(5,530))
+	screen.blit(font.render("Swaps:", True, WHITE),(5,560))
 	pygame.display.flip()
 
 # Close the window and quit.
