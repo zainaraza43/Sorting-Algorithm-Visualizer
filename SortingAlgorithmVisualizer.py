@@ -28,7 +28,7 @@ random.shuffle(bars)
 sort = False
 
 # Sorting algorithms
-algos = ["Bubble Sort","Insertion Sort"]
+algos = ["Bubble Sort","Insertion Sort","Merge Sort"]
 index = 0
 currentAlgo = algos[index]
 
@@ -128,7 +128,46 @@ def InsertionSort(list):
 		pygame.time.delay(15)
 		pygame.display.flip()
 		
- 
+def MergeSort(list, comparisons = 0, swaps = 0):
+
+	if len(list) > 1:
+
+		mid = len(list) // 2
+		L = list[:mid]
+		R = list[mid:]
+
+		MergeSort(L, comparisons, swaps)
+		MergeSort(R, comparisons, swaps)
+
+		i = j = k = 0
+
+		while i < len(L) and j < len(R):
+
+			for bar in bars:
+				pygame.event.pump()
+				pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
+				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
+				pygame.display.flip()
+			
+			if L[i].value < R[j].value:
+				list[k] = L[i]
+				i += 1
+			else:
+				list[k] = R[j]
+				j += 1
+			k += 1
+
+		while i < len(L):
+			list[k] = L[i]
+			i += 1
+			k += 1
+
+		while j < len(R):
+			list[k] = R[j]
+			j += 1
+			k += 1
+
+
 # Set the width and height of the screen [width, height]
 size = (500, 700)
 screen = pygame.display.set_mode(size)
@@ -160,6 +199,8 @@ while not done:
 					BubbleSort(bars)
 				elif currentAlgo == "Insertion Sort":
 					InsertionSort(bars)
+				elif currentAlgo == "Merge Sort":
+					MergeSort(bars)
 				sort = True
 
 			if event.key == pygame.K_RIGHT: # If right arrow is pressed
@@ -190,7 +231,7 @@ while not done:
 	currentAlgo = algos[index]
 
 	screen.blit(font.render("Current Algorithm:", True, WHITE),(5,500))
-	pygame.draw.rect(screen, BLACK, pygame.Rect(220,500,200,25))
+	pygame.draw.rect(screen, BLACK, pygame.Rect(220,500,200,30))
 	screen.blit(font.render(currentAlgo, True, WHITE),(220,500))
 	screen.blit(font.render("Comparisons:", True, WHITE),(5,530))
 	screen.blit(font.render("Swaps:", True, WHITE),(5,560))
