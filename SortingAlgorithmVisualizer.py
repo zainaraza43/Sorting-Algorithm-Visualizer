@@ -39,6 +39,19 @@ def BubbleSelected(list, item, colour):
 		else:
 			l.colour = WHITE
 
+def InsertionSelected(list, item1, item2):
+	for l in list:
+		if l == item1:
+			l.colour = RED
+		elif l == item2:
+			l.colour = GREEN
+		else:
+			l.colour = WHITE
+
+def ResetSelected(list):
+	for l in list:
+		l.colour = WHITE
+
 def BubbleSort(list):
 	
 	comparisons = 0
@@ -49,15 +62,14 @@ def BubbleSort(list):
 
 			BubbleSelected(list, list[j], RED)
 
-
 			pygame.draw.rect(screen, BLACK, pygame.Rect(250,530,50,25))
 			comparisons += 1
 			screen.blit(font.render(str(comparisons), True, WHITE),(250,530))
 
 			for bar in bars:
 				pygame.event.pump()
-				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
 				pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
+				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
 				pygame.display.flip()
 
 			if list[j].value > list[j+1].value:
@@ -71,6 +83,8 @@ def BubbleSort(list):
 		pygame.time.delay(15)
 		pygame.display.flip()
 
+	ResetSelected(list)
+
 def InsertionSort(list):
 
 	comparisons = 0
@@ -78,17 +92,36 @@ def InsertionSort(list):
 
 	for i in range(1, len(list)):
 
+		comparisons += 1
+
 		j = i
 		while j > 0 and list[j-1].value > list[j].value:
 
+			InsertionSelected(list, list[j], list[i])
+			comparisons += 1
+			swaps += 1
+
+			pygame.draw.rect(screen, BLACK, pygame.Rect(250,530,50,25))
+			pygame.draw.rect(screen, BLACK, pygame.Rect(250,560,50,25))
+			screen.blit(font.render(str(comparisons), True, WHITE),(250,530))
+			screen.blit(font.render(str(swaps), True, WHITE),(250,560))
+
 			for bar in bars:
 				pygame.event.pump()
-				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
 				pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
+				pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
+				pygame.time.delay(1)
 				pygame.display.flip()
 
 			list[j], list[j-1] = list[j-1], list[j]
 			j -= 1
+
+	ResetSelected(list)
+
+	for bar in bars: # Weird solution to bar colour bug (find a better fix later)
+		pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
+		pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10,500 - bar.value*10, 10, bar.value * 10))
+		pygame.display.flip()
 
 	for bar in bars:
 		pygame.draw.rect(screen, GREEN, pygame.Rect(bars.index(bar)*10, 500 - bar.value*10, 10, bar.value * 10))
@@ -149,7 +182,7 @@ while not done:
 
 
 	for bar in bars:
-		pygame.draw.rect(screen, WHITE, pygame.Rect(bars.index(bar)*10, 500 - bar.value*10, 10, bar.value * 10))
+		pygame.draw.rect(screen, bar.colour, pygame.Rect(bars.index(bar)*10, 500 - bar.value*10, 10, bar.value * 10))
 		pygame.draw.rect(screen, BLACK, pygame.Rect(bars.index(bar)*10, 0, 10, 500-bar.value*10))
 
 	# UI Stuff
