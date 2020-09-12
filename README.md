@@ -6,7 +6,7 @@ This project is a basic simulation of a multiple sorting algorithm.
 The user can choose what sorting algorithm they want visualized and run it.
 The user can also shuffle the list as needed.
 
-### What did we use?
+### What did I use?
 - Python's pygame for graphics
 - Bubble Sort
 - Insertion Sort
